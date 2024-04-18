@@ -5,14 +5,12 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "structs/FPlayerStruct.h"
-#include "SpacetimeDbLib/Public/types/adapters/JsonObjectAdapter.h"
 #include "SpacetimeDbLib/Public/Utils.h"
 // #include "SpacetimeDbLib/Public/SpacetimeClientComponent.h"
 #include "types/Identity.h"
 #include "components/StdbPlayerComponent.h"
 #include "SpacetimeClientComponent.h"
 #include "nlohmann/json.hpp"
-#include "types/json/JsonNestedArray.h"
 
 #include "PlayerTable.generated.h"
 
@@ -23,9 +21,6 @@ UCLASS()
 class TOPDOWNPROJECT_API UPlayerTable : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-
-	inline static JsonValueAdapter jsonValueAdapter;
-	inline static JsonObjectAdapter jsonObjectAdapter = JsonObjectAdapter(&jsonValueAdapter);
 	
 public:
 	

@@ -80,13 +80,12 @@ public:
 	void SendWsMessage(std::string payload);
 
 	// Calls
-	void InvokeReducer(FString reducerName, TArray<TSharedPtr<FJsonValue>> args);
 	void InvokeReducer(std::string reducerName, nlohmann::basic_json<> args);
 
 	// Message handlers
-	void HandleIdentityMessage(TSharedPtr<FJsonObject> payload);
-	void HandleSubscriptionUpdateMessage(TSharedPtr<FJsonObject> payload);
-	void HandleTransactionUpdate(TSharedPtr<FJsonObject> payload);
+	void HandleIdentityMessage(nlohmann::basic_json<> payload);
+	void HandleSubscriptionUpdateMessage(nlohmann::basic_json<> payload);
+	void HandleTransactionUpdate(nlohmann::basic_json<> payload);
 	
 	// Public functions
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create connection with Spacetime DB", Keywords = "Spacetime connect"), Category = "SpacetimeDbLib")

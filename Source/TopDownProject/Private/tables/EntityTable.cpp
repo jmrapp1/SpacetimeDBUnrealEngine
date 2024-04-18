@@ -3,28 +3,29 @@
 
 #include "tables/EntityTable.h"
 
+
 FEntityComponent UEntityTable::DeserializeEntity(FString EntityJson)
 {
-	auto entityJson = Utils::ParseJsonArray(Utils::ToString(EntityJson));
+	auto entityJson = nlohmann::json::parse(Utils::ToString(EntityJson));
 	
 	FEntityComponent entity;
-	entity.Id = entityJson[0]->AsNumber();
+	entity.Id = entityJson[0].get<int>();
 
-	auto posArray = entityJson[1]->AsArray();
+	auto posArray = entityJson[1];
 	entity.Position = FVector3f(
-		posArray[0]->AsNumber(),
-		posArray[1]->AsNumber(),
-		posArray[2]->AsNumber()
+		posArray[0].get<int>(),
+		posArray[1].get<int>(),
+		posArray[2].get<int>()
 	);
 
-	auto rotArray = entityJson[2]->AsArray();
+	auto rotArray = entityJson[2];
 	entity.Rotation = FRotator3f(
-		rotArray[0]->AsNumber(),
-		rotArray[1]->AsNumber(),
-		rotArray[2]->AsNumber()
+		rotArray[0].get<int>(),
+		rotArray[1].get<int>(),
+		rotArray[2].get<int>()
 	);
 
-	entity.Moving = entityJson[3]->AsBool();
+	entity.Moving = entityJson[3].get<bool>();
 
 	return entity;
 }

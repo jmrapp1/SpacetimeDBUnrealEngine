@@ -3,6 +3,7 @@
 #pragma once
 
 #include "SubscriptionUpdate.h"
+#include "nlohmann/json.hpp"
 
 #include "TransactionUpdate.generated.h"
 
@@ -14,12 +15,12 @@ struct SPACETIMEDBLIB_API FTransactionUpdate
 	UPROPERTY(BlueprintReadWrite)
 	FSubscriptionUpdate SubscriptionUpdate;
 	
-	static FTransactionUpdate Build(TSharedPtr<FJsonObject> json)
+	static FTransactionUpdate Build(nlohmann::basic_json<> json)
 	{
 		FTransactionUpdate transactionUpdate;
 		
 		// build subscription updates
-		transactionUpdate.SubscriptionUpdate = FSubscriptionUpdate::Build(json->GetObjectField("subscription_update"));
+		transactionUpdate.SubscriptionUpdate = FSubscriptionUpdate::Build(json["subscription_update"]);
 		
 		return transactionUpdate;
 	}

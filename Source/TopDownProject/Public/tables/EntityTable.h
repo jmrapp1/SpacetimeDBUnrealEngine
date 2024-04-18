@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "components/SpacetimeEntityComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "SpacetimeDbLib/Public/types/adapters/JsonObjectAdapter.h"
 #include "SpacetimeDbLib/Public/Utils.h"
 #include "structs/EntityComponent.h"
+#include "nlohmann/json.hpp"
 #include "EntityTable.generated.h"
 
 /**
@@ -17,9 +17,6 @@ UCLASS()
 class TOPDOWNPROJECT_API UEntityTable : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-
-	inline static JsonValueAdapter jsonValueAdapter;
-	inline static JsonObjectAdapter jsonObjectAdapter = JsonObjectAdapter(&jsonValueAdapter);
 	
 public:
 	

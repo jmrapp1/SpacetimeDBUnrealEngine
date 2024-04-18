@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utils.h"
+#include "nlohmann/json.hpp"
 
 struct SubscribeAction
 {
@@ -15,19 +16,18 @@ struct SubscribeAction
 	 */
 	static std::string BuildSubscribe(TArray<FString> queries)
 	{
-		TSharedPtr<FJsonObject> requestJson = MakeShareable(new FJsonObject);
-		TSharedPtr<FJsonObject> subscribeJson = MakeShareable(new FJsonObject);
-		TArray<TSharedPtr<FJsonValue>> queriesJson;
-
+		auto queriesJson = nlohmann::json::array({});
 		for (FString query : queries)
 		{
-			queriesJson.Add(MakeShareable(new FJsonValueString(query)));
+			queriesJson.push_back(Utils::ToString(query));
 		}
-		
-		subscribeJson->SetArrayField("query_strings", queriesJson);
-		requestJson->SetObjectField("subscribe", subscribeJson);
-		return Utils::ToString(Utils::JsonToFString(requestJson));
-	}
 
-	
+		nlohmann::json json = {
+			{"subscribe", {
+					{"query_strings", queriesJson}
+				}
+			}
+		};
+		return json.dump();
+	}
 };

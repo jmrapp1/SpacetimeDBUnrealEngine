@@ -3,6 +3,7 @@
 #pragma once
 
 #include "TableRowOperation.h"
+#include "nlohmann/json.hpp"
 
 #include "TableUpdate.generated.h"
 
@@ -29,17 +30,17 @@ struct SPACETIMEDBLIB_API FTableUpdate
 	UPROPERTY(BlueprintReadWrite)
 	FString AfterUpdateJson;
 
-	static FTableUpdate Build(TSharedPtr<FJsonObject> json)
+	static FTableUpdate Build(nlohmann::basic_json<> json)
 	{
 		FTableUpdate tableUpdate;
-		tableUpdate.TableId = json->GetIntegerField("table_id");
-		tableUpdate.TableName = json->GetStringField("table_name");
+		tableUpdate.TableId = json["table_id"].get<int>();
+		tableUpdate.TableName = Utils::ToFString(json["table_name"].get<std::string>());
 
 		// add row ops
-		auto rowOpsJson = json->GetArrayField("table_row_operations");
-		for (TSharedPtr<FJsonValue> rowOp : rowOpsJson)
+		auto rowOpsJson = json["table_row_operations"];
+		for (auto& rowOp : rowOpsJson)
 		{
-			tableUpdate.TableRowOperations.Push(FTableRowOperation::Build(rowOp->AsObject()));
+			tableUpdate.TableRowOperations.Push(FTableRowOperation::Build(rowOp));
 		}
 		
 		return tableUpdate;

@@ -104,17 +104,17 @@ void USpacetimeClientComponent::OnMessage(websocketpp::connection_hdl, Websocket
 {
 	Utils::LogInfo("Message received");
 	Utils::LogInfo(msg->get_payload());
-	const auto payload = Utils::ParseJsonObject(msg->get_payload());
+	const auto payload = nlohmann::json::parse(msg->get_payload());
 
-	if (payload->HasField("IdentityToken"))
+	if (payload.contains("IdentityToken"))
 	{
 		HandleIdentityMessage(payload);
 	}
-	else if (payload->HasField("SubscriptionUpdate"))
+	else if (payload.contains("SubscriptionUpdate"))
 	{
 		HandleSubscriptionUpdateMessage(payload);
 	}
-	else if (payload->HasField("TransactionUpdate"))
+	else if (payload.contains("TransactionUpdate"))
 	{
 		HandleTransactionUpdate(payload);
 	}
@@ -126,26 +126,26 @@ void USpacetimeClientComponent::OnMessage(websocketpp::connection_hdl, Websocket
 	}
 }
 
-void USpacetimeClientComponent::HandleIdentityMessage(TSharedPtr<FJsonObject> payload)
+void USpacetimeClientComponent::HandleIdentityMessage(nlohmann::basic_json<> payload)
 {
-	const auto identityJson = payload->GetObjectField("IdentityToken");
+	const auto identityJson = payload["IdentityToken"];
 
-	ClientIdentity.Identity = identityJson->GetStringField("identity");
-	ClientIdentity.Token = identityJson->GetStringField("token");
-	ClientIdentity.Address = identityJson->GetStringField("address");
+	ClientIdentity.Identity = Utils::ToFString(identityJson["identity"].get<std::string>());
+	ClientIdentity.Token = Utils::ToFString(identityJson["token"].get<std::string>());
+	ClientIdentity.Address = Utils::ToFString(identityJson["address"].get<std::string>());
 
 	OnIdentityReceived.Broadcast(ClientIdentity);
 }
 
-void USpacetimeClientComponent::HandleSubscriptionUpdateMessage(TSharedPtr<FJsonObject> payload)
+void USpacetimeClientComponent::HandleSubscriptionUpdateMessage(nlohmann::basic_json<> payload)
 {
-	FSubscriptionUpdate update = FSubscriptionUpdate::Build(payload->GetObjectField(FString("SubscriptionUpdate")));
+	FSubscriptionUpdate update = FSubscriptionUpdate::Build(payload["SubscriptionUpdate"]);
 	OnSubscriptionUpdate.Broadcast(update);
 }
 
-void USpacetimeClientComponent::HandleTransactionUpdate(TSharedPtr<FJsonObject> payload)
+void USpacetimeClientComponent::HandleTransactionUpdate(nlohmann::basic_json<> payload)
 {
-	FTransactionUpdate update = FTransactionUpdate::Build(payload->GetObjectField(FString("TransactionUpdate")));
+	FTransactionUpdate update = FTransactionUpdate::Build(payload["TransactionUpdate"]);
 
 	for (FTableUpdate& tableUpdate : update.SubscriptionUpdate.TableUpdates)
 	{
@@ -184,18 +184,6 @@ void USpacetimeClientComponent::SendWsMessage(std::string payload)
 		GEngine->AddOnScreenDebugMessage(-1, 25.f, FColor::Red, L"Error sending message");
 		Utils::LogError(ec.message());
 	}
-}
-
-void USpacetimeClientComponent::InvokeReducer(FString reducerName, TArray<TSharedPtr<FJsonValue>> args)
-{
-	TSharedPtr<FJsonObject> requestJson = MakeShareable(new FJsonObject);
-	TSharedPtr<FJsonObject> callJson = MakeShareable(new FJsonObject);
-
-	callJson->SetStringField("fn", reducerName);
-	callJson->SetArrayField("args", args);
-	requestJson->SetObjectField("call", callJson);
-
-	SendWsMessage(Utils::ToString(Utils::JsonToFString(requestJson)));
 }
 
 void USpacetimeClientComponent::InvokeReducer(std::string reducerName, nlohmann::basic_json<> args)

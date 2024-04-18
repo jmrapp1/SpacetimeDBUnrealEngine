@@ -2,6 +2,7 @@
 
 #pragma once
 #include "TableUpdate.h"
+#include "nlohmann/json.hpp"
 
 #include "SubscriptionUpdate.generated.h"
 
@@ -16,17 +17,17 @@ struct SPACETIMEDBLIB_API FSubscriptionUpdate
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FTableUpdate> TableUpdates;
 
-	static FSubscriptionUpdate Build(TSharedPtr<FJsonObject> json)
+	static FSubscriptionUpdate Build(nlohmann::basic_json<> json)
 	{
 		FSubscriptionUpdate subscriptionUpdate;
 
 		// get table updates array
-		auto tableUpdatesJson = json->GetArrayField("table_updates");
+		nlohmann::json tableUpdatesJson = json["table_updates"];
 
 		// build table updates
-		for (TSharedPtr<FJsonValue> updateJson : tableUpdatesJson)
+		for (auto& updateJson : tableUpdatesJson)
 		{
-			subscriptionUpdate.TableUpdates.Push(FTableUpdate::Build(updateJson->AsObject()));
+			subscriptionUpdate.TableUpdates.Push(FTableUpdate::Build(updateJson));
 		}
 
 		return subscriptionUpdate;

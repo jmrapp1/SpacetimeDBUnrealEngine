@@ -17,20 +17,19 @@
  */
 FPlayerStruct UPlayerTable::DeserializePlayer(FString playerJsonStr)
 {
-	auto playerJson = Utils::ParseJsonArray(Utils::ToString(playerJsonStr));
+	auto playerJson = nlohmann::json::parse(Utils::ToString(playerJsonStr));
 	
 	FPlayerStruct player;
-	player.Identity = playerJson[0]->AsArray()[0]->AsString();
+	player.Identity = Utils::ToFString(playerJson[0][0].get<std::string>());
 
 	// Read name
-	auto name = jsonObjectAdapter.ReadSome(playerJson[1]->AsObject(), AlgebraicType::STRING);
-	if (name.IsSet)
+	if (playerJson[1].contains("0"))
 	{
-		player.Name = name.String;
+		player.Name = Utils::ToFString(playerJson[1]["0"].get<std::string>());
 	}
 
-	player.Online = playerJson[2]->AsBool();
-	player.EntityComponentId = playerJson[3]->AsNumber();
+	player.Online = playerJson[2].get<bool>();
+	player.EntityComponentId = playerJson[3].get<int>();
 	
 	return player;
 }

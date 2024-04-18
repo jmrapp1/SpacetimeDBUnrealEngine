@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "nlohmann/json.hpp"
 
 #include "TableRowOperation.generated.h"
 
@@ -15,11 +16,11 @@ struct SPACETIMEDBLIB_API FTableRowOperation
 	UPROPERTY(BlueprintReadWrite)
 	FString RowJson;
 
-	static FTableRowOperation Build(TSharedPtr<FJsonObject> json)
+	static FTableRowOperation Build(nlohmann::basic_json<> json)
 	{
 		FTableRowOperation rowOperation;
-		rowOperation.Op = json->GetStringField("op");
-		rowOperation.RowJson = Utils::JsonToFString(json->GetArrayField("row"));
+		rowOperation.Op = Utils::ToFString(json["op"].get<std::string>());
+		rowOperation.RowJson = Utils::ToFString(json["row"].dump());
 
 		return rowOperation;
 	}
