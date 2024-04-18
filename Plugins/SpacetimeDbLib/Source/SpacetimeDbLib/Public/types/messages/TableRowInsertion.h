@@ -2,24 +2,21 @@
 
 #pragma once
 #include "nlohmann/json.hpp"
+#include "SpacetimeDbLib/Public/Utils.h"
 
-#include "TableRowOperation.generated.h"
+#include "TableRowInsertion.generated.h"
 
 USTRUCT(BlueprintType)
-struct SPACETIMEDBLIB_API FTableRowOperation
+struct SPACETIMEDBLIB_API FTableRowInsertion
 {
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite)
-	FString Op;
-
-	UPROPERTY(BlueprintReadWrite)
 	FString RowJson;
 
-	static FTableRowOperation Build(nlohmann::basic_json<> json)
+	static FTableRowInsertion Build(nlohmann::basic_json<> json)
 	{
-		FTableRowOperation rowOperation;
-		rowOperation.Op = Utils::ToFString(json["op"].get<std::string>());
+		FTableRowInsertion rowOperation;
 		rowOperation.RowJson = Utils::ToFString(json["row"].dump());
 
 		return rowOperation;

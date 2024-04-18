@@ -147,29 +147,6 @@ void USpacetimeClientComponent::HandleTransactionUpdate(nlohmann::basic_json<> p
 {
 	FTransactionUpdate update = FTransactionUpdate::Build(payload["TransactionUpdate"]);
 
-	for (FTableUpdate& tableUpdate : update.SubscriptionUpdate.TableUpdates)
-	{
-		tableUpdate.UpdateOperation = false;
-
-		// check if it's an update
-		if (tableUpdate.TableRowOperations.Num() == 2)
-		{
-			if (tableUpdate.TableRowOperations[0].Op == "insert" && tableUpdate.TableRowOperations[1].Op == "delete")
-			{
-				tableUpdate.UpdateOperation = true;
-				tableUpdate.AfterUpdateJson = tableUpdate.TableRowOperations[0].RowJson;
-				tableUpdate.BeforeUpdateJson = tableUpdate.TableRowOperations[1].RowJson;
-			}
-			else if (tableUpdate.TableRowOperations[1].Op == "insert" && tableUpdate.TableRowOperations[0].Op ==
-				"delete")
-			{
-				tableUpdate.UpdateOperation = true;
-				tableUpdate.AfterUpdateJson = tableUpdate.TableRowOperations[1].RowJson;
-				tableUpdate.BeforeUpdateJson = tableUpdate.TableRowOperations[0].RowJson;
-			}
-		}
-	}
-
 	OnTransactionUpdate.Broadcast(update);
 }
 
