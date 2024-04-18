@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SpacetimeClientComponent.h"
+#include "components/SpacetimeClientComponent.h"
 
 
 // Sets default values for this component's properties
@@ -16,8 +16,6 @@ void USpacetimeClientComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-
-// Called when the game starts
 void USpacetimeClientComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -51,6 +49,11 @@ void USpacetimeClientComponent::BeginPlay()
 		Utils::LogError(e.what());
 		FDebug::DumpStackTraceToLog(ELogVerbosity::Type::Error);
 	}
+}
+
+void USpacetimeClientComponent::OnComponentCreated()
+{
+	Super::OnComponentCreated();
 }
 
 void USpacetimeClientComponent::Connect(FString endpoint)
@@ -121,8 +124,7 @@ void USpacetimeClientComponent::OnMessage(websocketpp::connection_hdl, Websocket
 	else
 	{
 		// Trigger event
-		Utils::LogInfo("Broadcasting message event");
-		OnMessageReceived.Broadcast(Utils::ToFString(msg->get_payload()));
+		Utils::LogInfo("Last event was unknown");
 	}
 }
 
@@ -134,20 +136,35 @@ void USpacetimeClientComponent::HandleIdentityMessage(nlohmann::basic_json<> pay
 	ClientIdentity.Token = Utils::ToFString(identityJson["token"].get<std::string>());
 	ClientIdentity.Address = Utils::ToFString(identityJson["address"].get<std::string>());
 
-	OnIdentityReceived.Broadcast(ClientIdentity);
+	// Broadcast event on game thread
+	FIdentity clientIdentity = ClientIdentity;
+	FOnIdentityReceived* delegateEvent = &OnIdentityReceived;
+	AsyncTask(ENamedThreads::GameThread, [clientIdentity, delegateEvent]()
+	{ 
+			delegateEvent->Broadcast(clientIdentity);
+	});
 }
 
 void USpacetimeClientComponent::HandleSubscriptionUpdateMessage(nlohmann::basic_json<> payload)
 {
+	// Broadcast event on game thread
 	FSubscriptionUpdate update = FSubscriptionUpdate::Build(payload["SubscriptionUpdate"]);
-	OnSubscriptionUpdate.Broadcast(update);
+	FOnSubscriptionUpdate* delegateEvent = &OnSubscriptionUpdate;
+	AsyncTask(ENamedThreads::GameThread, [update, delegateEvent]()
+	{ 
+			delegateEvent->Broadcast(update);
+	});
 }
 
 void USpacetimeClientComponent::HandleTransactionUpdate(nlohmann::basic_json<> payload)
 {
+	// Broadcast event on game thread
 	FTransactionUpdate update = FTransactionUpdate::Build(payload["TransactionUpdate"]);
-
-	OnTransactionUpdate.Broadcast(update);
+	FOnTransactionUpdate* delegateEvent = &OnTransactionUpdate;
+	AsyncTask(ENamedThreads::GameThread, [update, delegateEvent]()
+	{ 
+			delegateEvent->Broadcast(update);
+	});
 }
 
 void USpacetimeClientComponent::SendWsMessage(std::string payload)
@@ -165,15 +182,7 @@ void USpacetimeClientComponent::SendWsMessage(std::string payload)
 
 void USpacetimeClientComponent::InvokeReducer(std::string reducerName, nlohmann::basic_json<> args)
 {
-	nlohmann::json reducerJson = {
-		{
-			"call", {
-				{"fn", reducerName},
-				{"args", args}
-			}
-		}
-	};
-	SendWsMessage(reducerJson.dump());
+	SendWsMessage(ReducerAction::BuildReducerAction(reducerName, args));
 }
 
 void USpacetimeClientComponent::Subscribe(TArray<FString> queries)

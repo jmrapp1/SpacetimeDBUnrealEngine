@@ -34,16 +34,6 @@ FPlayerStruct UPlayerTable::DeserializePlayer(FString playerJsonStr)
 	return player;
 }
 
-TArray<FPlayerStruct> UPlayerTable::DeserializePlayers(TArray<FString> playerJsons)
-{
-	TArray<FPlayerStruct> arr;
-	for (FString jsonStr : playerJsons)
-	{
-		arr.Push(DeserializePlayer(jsonStr));
-	}
-	return arr;
-}
-
 bool UPlayerTable::IsLocalPlayer(FIdentity Identity, FPlayerStruct Player)
 {
 	return Player.Identity == Identity.Identity;

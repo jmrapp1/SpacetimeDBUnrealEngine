@@ -15,6 +15,7 @@
 #include "types/Identity.h"
 #include "types/messages/TransactionUpdate.h"
 #include "actions/SubscribeAction.h"
+#include "actions/ReducerAction.h"
 #include "nlohmann/json.hpp"
 #include "SpacetimeClientComponent.generated.h"
 
@@ -63,8 +64,10 @@ class SPACETIMEDBLIB_API USpacetimeClientComponent : public UActorComponent
 
 protected:
 	virtual void BeginPlay() override;
-	
+
 public:
+	virtual void OnComponentCreated() override;
+
 	USpacetimeClientComponent();
 
 	UPROPERTY(BlueprintReadWrite)

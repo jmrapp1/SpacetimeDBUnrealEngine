@@ -13,13 +13,13 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SPACETIMEDBLIB_API USpacetimeClientConsumerComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	
-private:
-	USpacetimeClientComponent* spacetimeClient;
 
 public:
-
+	
 	UPROPERTY(BlueprintReadWrite)
+	USpacetimeClientComponent* SpacetimeClient;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> SpacetimeClientActorType;
 	
 	// Sets default values for this component's properties

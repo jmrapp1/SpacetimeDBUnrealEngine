@@ -18,7 +18,7 @@
 		{
 			"Name": "SpacetimeDbLib",
 			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
+			"LoadingPhase": "PostEngineInit"
 		}
 	]
 }

@@ -11,9 +11,9 @@ USpacetimeClientConsumerComponent::USpacetimeClientConsumerComponent()
 
 USpacetimeClientComponent* USpacetimeClientConsumerComponent::GetSpacetimeClientRef()
 {
-	if (spacetimeClient != nullptr)
+	if (SpacetimeClient != nullptr)
 	{
-		return spacetimeClient;
+		return SpacetimeClient;
 	}
 	
 	TArray<AActor*> FoundActors;
@@ -29,14 +29,14 @@ USpacetimeClientComponent* USpacetimeClientConsumerComponent::GetSpacetimeClient
 		return nullptr;
 	}
 
-	spacetimeClient = FoundActors[0]->FindComponentByClass<USpacetimeClientComponent>();
-	if (spacetimeClient == nullptr)
+	SpacetimeClient = FoundActors[0]->FindComponentByClass<USpacetimeClientComponent>();
+	if (SpacetimeClient == nullptr)
 	{
 		Utils::LogError("Found actor but did not find SpacetimeClientComponent - from SpacetimeClientConsumerComponent");
 		return nullptr;
 	}
 
-	return spacetimeClient;
+	return SpacetimeClient;
 }
 
 

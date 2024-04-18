@@ -40,19 +40,22 @@ struct SPACETIMEDBLIB_API FTableUpdate
 		{
 			auto firstRowOp = rowOpsJson[0]["op"].get<std::string>();
 			auto secondRowOp = rowOpsJson[1]["op"].get<std::string>();
+			auto firstRowJson = rowOpsJson[0]["row"].dump();
+			auto secondRowJson = rowOpsJson[1]["row"].dump();
+			
 			if (firstRowOp == "insert" && secondRowOp == "delete")
 			{
 				FTableRowUpdate update;
-				update.BeforeUpdateJson = Utils::ToFString(secondRowOp);
-				update.AfterUpdateJson = Utils::ToFString(firstRowOp);
+				update.BeforeUpdateJson = Utils::ToFString(secondRowJson);
+				update.AfterUpdateJson = Utils::ToFString(firstRowJson);
 				tableUpdate.Updates.Push(update);
 				isUpdate = true;
 			}
 			else if (firstRowOp == "delete" && secondRowOp == "insert")
 			{
 				FTableRowUpdate update;
-				update.BeforeUpdateJson = Utils::ToFString(firstRowOp);
-				update.AfterUpdateJson = Utils::ToFString(secondRowOp);
+				update.BeforeUpdateJson = Utils::ToFString(firstRowJson);
+				update.AfterUpdateJson = Utils::ToFString(secondRowJson);
 				tableUpdate.Updates.Push(update);
 				isUpdate = true;
 			}

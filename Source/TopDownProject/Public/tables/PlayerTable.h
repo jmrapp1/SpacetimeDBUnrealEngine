@@ -9,7 +9,7 @@
 // #include "SpacetimeDbLib/Public/SpacetimeClientComponent.h"
 #include "types/Identity.h"
 #include "components/StdbPlayerComponent.h"
-#include "SpacetimeClientComponent.h"
+#include "components/SpacetimeClientComponent.h"
 #include "nlohmann/json.hpp"
 
 #include "PlayerTable.generated.h"
@@ -26,10 +26,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Deserialize Player", Keywords = "Spacetime Player Deserialize"), Category = "SpacetimeDbLib")
 	static FPlayerStruct DeserializePlayer(FString PlayerJson);
-
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Deserialize Players", Keywords = "Spacetime Player Deserialize"), Category = "SpacetimeDbLib")
-	static TArray<FPlayerStruct> DeserializePlayers(TArray<FString> PlayerJsons);
-
+	
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is Local Player", Keywords = "Spacetime Is Local Player"), Category = "SpacetimeDbLib")
 	static bool IsLocalPlayer(FIdentity Identity, FPlayerStruct Player);
 
