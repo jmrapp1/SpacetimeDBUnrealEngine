@@ -27,14 +27,7 @@ public:
 	// Sets default values for this component's properties
 	USpacetimeEntityComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "On Entity Component Initialization", Keywords = "Spacetime Entity Component Initialization"), Category = "SpacetimeDbLib")
 	void OnEntityComponentInit(int EntityComponentId);

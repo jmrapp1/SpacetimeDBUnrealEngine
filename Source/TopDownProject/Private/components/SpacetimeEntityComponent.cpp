@@ -12,21 +12,6 @@ USpacetimeEntityComponent::USpacetimeEntityComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-
-// Called when the game starts
-void USpacetimeEntityComponent::BeginPlay()
-{
-	Super::BeginPlay();	
-}
-
-
-// Called every frame
-void USpacetimeEntityComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                              FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
-
 void USpacetimeEntityComponent::OnEntityComponentInit(int EntityComponentId)
 {
 	EntityComponent.Id = EntityComponentId;
@@ -41,6 +26,7 @@ void USpacetimeEntityComponent::OnEntityComponentInsertion(FEntityComponent NewE
 	
 	EntityComponent.Position = NewEntity.Position;
 	EntityComponent.Rotation = NewEntity.Rotation;
+	EntityComponent.Velocity = NewEntity.Velocity;
 	EntityComponent.Moving = NewEntity.Moving;
 
 	OnEntityInsertion.Broadcast();
@@ -55,6 +41,7 @@ void USpacetimeEntityComponent::OnEntityComponentUpdate(FEntityComponent EntityU
 	
 	EntityComponent.Position = EntityUpdate.Position;
 	EntityComponent.Rotation = EntityUpdate.Rotation;
+	EntityComponent.Velocity = EntityUpdate.Velocity;
 	EntityComponent.Moving = EntityUpdate.Moving;
 	
 	OnEntityUpdate.Broadcast();

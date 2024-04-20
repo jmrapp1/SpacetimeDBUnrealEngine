@@ -105,8 +105,8 @@ void USpacetimeClientComponent::OnConnectFailed(websocketpp::connection_hdl conn
 
 void USpacetimeClientComponent::OnMessage(websocketpp::connection_hdl, WebsocketClient::message_ptr msg)
 {
-	Utils::LogInfo("Message received");
-	Utils::LogInfo(msg->get_payload());
+	// Utils::LogInfo("Message received");
+	// Utils::LogInfo(msg->get_payload());
 	const auto payload = nlohmann::json::parse(msg->get_payload());
 
 	if (payload.contains("IdentityToken"))
@@ -123,7 +123,6 @@ void USpacetimeClientComponent::OnMessage(websocketpp::connection_hdl, Websocket
 	}
 	else
 	{
-		// Trigger event
 		Utils::LogInfo("Last event was unknown");
 	}
 }
@@ -141,7 +140,7 @@ void USpacetimeClientComponent::HandleIdentityMessage(nlohmann::basic_json<> pay
 	FOnIdentityReceived* delegateEvent = &OnIdentityReceived;
 	AsyncTask(ENamedThreads::GameThread, [clientIdentity, delegateEvent]()
 	{ 
-			delegateEvent->Broadcast(clientIdentity);
+		delegateEvent->Broadcast(clientIdentity);
 	});
 }
 
@@ -152,7 +151,7 @@ void USpacetimeClientComponent::HandleSubscriptionUpdateMessage(nlohmann::basic_
 	FOnSubscriptionUpdate* delegateEvent = &OnSubscriptionUpdate;
 	AsyncTask(ENamedThreads::GameThread, [update, delegateEvent]()
 	{ 
-			delegateEvent->Broadcast(update);
+		delegateEvent->Broadcast(update);
 	});
 }
 
@@ -163,13 +162,13 @@ void USpacetimeClientComponent::HandleTransactionUpdate(nlohmann::basic_json<> p
 	FOnTransactionUpdate* delegateEvent = &OnTransactionUpdate;
 	AsyncTask(ENamedThreads::GameThread, [update, delegateEvent]()
 	{ 
-			delegateEvent->Broadcast(update);
+		delegateEvent->Broadcast(update);
 	});
 }
 
 void USpacetimeClientComponent::SendWsMessage(std::string payload)
 {
-	Utils::LogInfo(payload);
+	// Utils::LogInfo(payload);
 
 	websocketpp::lib::error_code ec;
 	wsClient->send(openedWsConnectionHdl, payload, websocketpp::frame::opcode::text, ec);

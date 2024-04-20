@@ -34,6 +34,6 @@ public:
 	static UStdbPlayerComponent* FilterPlayerComponentsById(FString Id, TArray<UStdbPlayerComponent*> Players);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "[Reducer] Update Player Position", Keywords = "Spacetime Update Player Position"), Category = "SpacetimeDbLib")
-	static void UpdatePlayerPositionReducer(USpacetimeClientComponent* SpacetimeClient, FVector3f Position, FRotator3f Rotation, bool Moving);
+	static void UpdatePlayerPositionReducer(USpacetimeClientComponent* SpacetimeClient, FVector3f Position, FRotator3f Rotation, FVector3f Velocity, bool Moving);
 	
 };

@@ -51,7 +51,7 @@ UStdbPlayerComponent* UPlayerTable::FilterPlayerComponentsById(FString Id, TArra
 	return nullptr;
 }
 
-void UPlayerTable::UpdatePlayerPositionReducer(USpacetimeClientComponent* SpacetimeClient, FVector3f Position, FRotator3f Rotation, bool Moving)
+void UPlayerTable::UpdatePlayerPositionReducer(USpacetimeClientComponent* SpacetimeClient, FVector3f Position, FRotator3f Rotation, FVector3f Velocity, bool Moving)
 {
 	auto args = nlohmann::json::array({
 		{
@@ -63,6 +63,11 @@ void UPlayerTable::UpdatePlayerPositionReducer(USpacetimeClientComponent* Spacet
 			Rotation.Pitch,
 			Rotation.Yaw,
 			Rotation.Roll
+		},
+		{
+			Velocity.X,
+			Velocity.Y,
+			Velocity.Z
 		},
 		false
 	});

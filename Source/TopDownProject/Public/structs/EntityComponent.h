@@ -19,5 +19,8 @@ struct  TOPDOWNPROJECT_API FEntityComponent
 	FRotator3f Rotation;
 	
 	UPROPERTY(BlueprintReadWrite)
+	FVector3f Velocity;
+	
+	UPROPERTY(BlueprintReadWrite)
 	bool Moving;
 };

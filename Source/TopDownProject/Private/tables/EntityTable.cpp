@@ -23,9 +23,16 @@ FEntityComponent UEntityTable::DeserializeEntity(FString EntityJson)
 		rotArray[0].get<int>(),
 		rotArray[1].get<int>(),
 		rotArray[2].get<int>()
+		);
+
+	auto velArray = entityJson[3];
+	entity.Velocity = FVector3f(
+		velArray[0].get<int>(),
+		velArray[1].get<int>(),
+		velArray[2].get<int>()
 	);
 
-	entity.Moving = entityJson[3].get<bool>();
+	entity.Moving = entityJson[4].get<bool>();
 
 	return entity;
 }
