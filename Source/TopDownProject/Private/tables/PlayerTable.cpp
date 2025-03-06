@@ -43,7 +43,7 @@ UStdbPlayerComponent* UPlayerTable::FilterPlayerComponentsById(FString Id, TArra
 {
 	for (UStdbPlayerComponent* player : Players)
 	{
-		if (player->Player.Identity == Id)
+		if (player != nullptr && player->Player.Identity == Id)
 		{
 			return player;
 		}

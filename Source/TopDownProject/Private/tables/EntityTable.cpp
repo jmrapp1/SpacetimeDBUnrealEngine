@@ -41,7 +41,7 @@ USpacetimeEntityComponent* UEntityTable::FilterEntityComponentsById(int Id, TArr
 {
 	for (USpacetimeEntityComponent* entity : Entities)
 	{
-		if (entity->EntityComponent.Id == Id)
+		if (entity != nullptr && entity->EntityComponent.Id == Id)
 		{
 			return entity;
 		}
