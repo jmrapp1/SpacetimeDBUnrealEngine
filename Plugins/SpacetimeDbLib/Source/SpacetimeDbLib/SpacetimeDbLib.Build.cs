@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using UnrealBuildTool;
+using UnrealBuildTool.Rules;
 
 public class SpacetimeDbLib : ModuleRules
 {
@@ -13,26 +14,26 @@ public class SpacetimeDbLib : ModuleRules
 		// bEnableUndefinedIdentifierWarnings = false;
 
 		PublicIncludePaths.AddRange(
-			new string[]
-			{
-				@"D:\Unreal\TopDownProject\Plugins\SpacetimeDbLib\Source\SpacetimeDbLib\include"
-			}
+        new string[]
+        {
+                @"$(ProjectDir)\Plugins\SpacetimeDbLib\Source\SpacetimeDbLib\include"
+            }
 		);
 
 
 		PrivateIncludePaths.AddRange(
 			new string[]
 			{
-				@"D:\Unreal\TopDownProject\Plugins\SpacetimeDbLib\Source\SpacetimeDbLib\include"
-			}
+                @"$(ProjectDir)\Plugins\SpacetimeDbLib\Source\SpacetimeDbLib\include"
+            }
 		);
 
 
 		PublicSystemIncludePaths.AddRange(
 			new string[]
 			{
-				@"D:\Unreal\TopDownProject\Plugins\SpacetimeDbLib\Source\SpacetimeDbLib\include"
-			}
+                @"$(ProjectDir)\Plugins\SpacetimeDbLib\Source\SpacetimeDbLib\include"
+            }
 		);
 
 
